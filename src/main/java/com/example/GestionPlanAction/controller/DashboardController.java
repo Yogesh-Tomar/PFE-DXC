@@ -18,7 +18,7 @@ public class DashboardController {
     private DashboardService dashboardService;
 
     @GetMapping("/admin/stats")
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
     public AdminDashboardStats getAdminStats() {
         return dashboardService.getAdminStats();
     }
@@ -30,13 +30,13 @@ public class DashboardController {
     }
 
     @GetMapping("/director/stats")
-    @PreAuthorize("hasRole('GENERAL_DIRECTOR')")
+    @PreAuthorize("hasRole('DIRECTEUR_GENERAL')")
     public DirectorDashboardStats getDirectorStats() {
         return dashboardService.getDirectorStats();
     }
 
     @GetMapping("/director/pending-validations")
-    @PreAuthorize("hasRole('GENERAL_DIRECTOR')")
+    @PreAuthorize("hasRole('DIRECTEUR_GENERAL')")
     public List<PlanAction> getPendingValidations() {
         return dashboardService.getPendingValidations();
     }
