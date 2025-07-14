@@ -2,6 +2,7 @@ package com.example.GestionPlanAction.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,33 +30,15 @@ public class PlanActionServiceImpl implements PlanActionService {
 
 		List<Object[]> plans = repository.findAllplans();
 
-
 		List<PlanActionDTO> pdto = new ArrayList<>();
-		
-	
-	
+
 		for (Object[] plan : plans) {
 			List<VariableActionDTO> variableActions = new ArrayList<>();
-			
+
 			PlanActionDTO planActionDTO = new PlanActionDTO();
 			ResponsableDTO responsableDTO = new ResponsableDTO();
 			VariableActionDTO variableAction = new VariableActionDTO();
 			ExerciseDTO exerciceDTO = new ExerciseDTO();
-			if(plan[7] == null) {
-			// Skip if the first element is null
-			}else {
-			variableAction.setDescription((String) plan[12]);
-			variableAction.setVaMere((String) plan[11]);
-			variableAction.setId((Long) plan[8]);
-			variableAction.setPoids((float) plan[7]);
-			variableAction.setFige((Boolean) plan[5]);
-			
-			variableAction.setResonableid(responsableDTO);
-			//variableAction.setNiveau((int) plan[6]);
-			responsableDTO.setId((Long) plan[9]);
-
-			}
-
 			planActionDTO.setId((Long) plan[1]);
 			planActionDTO.setDescription((String) plan[2]);
 			planActionDTO.setTitre((String) plan[3]);
@@ -64,22 +47,60 @@ public class PlanActionServiceImpl implements PlanActionService {
 			exerciceDTO.setVerrouille((Boolean) plan[14]);
 			exerciceDTO.setId((Long) plan[15]);
 			planActionDTO.setExercice(exerciceDTO);
-		//	exerciceDTO.setAnnee((Integer) plan[5]);
-		//	exerciceDTO.setVerrouille((Integer) plan[6]);
-			//exerciceDTO.setId((Long) plan[7]);
+			// exerciceDTO.setAnnee((Integer) plan[5]);
+			// exerciceDTO.setVerrouille((Integer) plan[6]);
+			// exerciceDTO.setId((Long) plan[7]);
+
+			if (plan[7] == null) {
+				// Skip if the first element is null
+			} else {
+				Optional<PlanActionDTO> result = pdto.stream().filter(plant -> plant.getId().equals((Long) plan[1]))
+						.findFirst();
+				if (result.isPresent()) {
+
+					
+					//planActionDTO=result.get().getVariableActions();
+					variableAction.setDescription((String) plan[12]);
+					variableAction.setVaMere((String) plan[11]);
+					variableAction.setId((Long) plan[8]);
+					variableAction.setPoids((float) plan[7]);
+					variableAction.setFige((Boolean) plan[5]);
+
+					variableAction.setResonableid(responsableDTO);
+					// variableAction.setNiveau((int) plan[6]);
+					responsableDTO.setId((Long) plan[9]);
+					//variableActions.add(variableAction);
+					
+					variableActions = result.get().getVariableActions();
+
 			
-			variableActions.add(variableAction);
-			planActionDTO.setVariableActions(variableActions);
+				
+					variableActions.add(variableAction);
+					
+					
+
+				} else {
+					variableAction.setDescription((String) plan[12]);
+					variableAction.setVaMere((String) plan[11]);
+					variableAction.setId((Long) plan[8]);
+					variableAction.setPoids((float) plan[7]);
+					variableAction.setFige((Boolean) plan[5]);
+
+					variableAction.setResonableid(responsableDTO);
+					// variableAction.setNiveau((int) plan[6]);
+					responsableDTO.setId((Long) plan[9]);
+					variableActions.add(variableAction);
+					planActionDTO.setVariableActions(variableActions);
+					pdto.add(planActionDTO);
+
+				}
+			}
+			
 		
-		
-			
-			pdto.add(planActionDTO);
-			
+
 			System.out.println("PlanAction récupéré: " + planActionDTO.toString());
 		}
 
-		
-	
 		return pdto;
 	}
 
@@ -109,8 +130,7 @@ public class PlanActionServiceImpl implements PlanActionService {
 
 		if (variableActions.isEmpty()) {
 			variableActions.add(new VariableAction());
-		}
-		else {
+		} else {
 			System.out.println("Nombre de VariableAction associées: " + variableActions.toString());
 
 			List<VariableAction> variableActionsToSave = new ArrayList<>();
@@ -130,7 +150,6 @@ public class PlanActionServiceImpl implements PlanActionService {
 		}
 		return getplan;
 
-		
 	}
 
 	@Override
