@@ -28,7 +28,7 @@ public class PlanAction {
     @JoinColumn(name = "exercice_id")
     private Exercice exercice;
 
-    @OneToMany(mappedBy = "planAction", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "planAction", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<VariableAction> variableActions;
 }

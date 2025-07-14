@@ -48,4 +48,11 @@ public class VariableActionService {
     public void deleteVariableAction(Long id) {
         variableActionRepository.deleteById(id);
     }
+
+    // ✅ Mettre à jour l'état "fige" d'une variable d'action
+    public VariableAction updateFige(Long id, boolean fige) {
+        VariableAction existing = getVariableActionById(id);
+        existing.setFige(fige);
+        return variableActionRepository.save(existing);
+    }
 }

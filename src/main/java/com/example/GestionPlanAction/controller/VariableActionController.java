@@ -44,4 +44,10 @@ public class VariableActionController {
     public void delete(@PathVariable Long id) {
         variableActionService.deleteVariableAction(id);
     }
+
+    // ✅ PATCH update fige
+    @PatchMapping("/{id}/freeze")
+    public VariableAction updateFige(@PathVariable Long id, @RequestBody boolean fige) {
+        return variableActionService.updateFige(id, fige);
+    }
 }
