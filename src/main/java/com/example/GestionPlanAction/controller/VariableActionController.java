@@ -1,5 +1,7 @@
 package com.example.GestionPlanAction.controller;
 
+import com.example.GestionPlanAction.dto.VariableActionDTO;
+import com.example.GestionPlanAction.dto.VariableReponseDTO;
 import com.example.GestionPlanAction.model.VariableAction;
 import com.example.GestionPlanAction.service.VariableActionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +19,20 @@ public class VariableActionController {
 
     // ✅ GET all
     @GetMapping
-    public List<VariableAction> getAll() {
-        return variableActionService.getAllVariableActions();
+    public List<VariableActionDTO> getAll() {
+        return variableActionService.getAllVariableActionDTOs();
     }
 
     // ✅ GET by ID
     @GetMapping("/{id}")
     public VariableAction getById(@PathVariable Long id) {
         return variableActionService.getVariableActionById(id);
+    }
+
+    // ✅ GET by ID
+    @GetMapping("/edit/{id}")
+    public VariableReponseDTO getByIdForEdit(@PathVariable Long id) {
+        return variableActionService.getVariableActionEditById(id);
     }
 
     // ✅ CREATE
