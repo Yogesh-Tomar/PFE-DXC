@@ -1,5 +1,7 @@
 package com.example.GestionPlanAction.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,17 +24,21 @@ public class VariableAction {
     private int niveau;
 
     @ManyToOne
-    @JoinColumn(name = "va_mere_id")
-    private VariableAction vaMere;
-
-    @OneToMany(mappedBy = "vaMere", cascade = CascadeType.ALL)
-    private List<VariableAction> sousVAs;
-
-    @ManyToOne
     @JoinColumn(name = "responsable_id")
     private User responsable;
 
     @ManyToOne
     @JoinColumn(name = "plan_action_id")
+    @JsonBackReference
     private PlanAction planAction;
+
+    // Prevent recursion for parent-child VariableAction
+    @ManyToOne
+    @JoinColumn(name = "va_mere_id")
+    @JsonBackReference("vaMere")
+    private VariableAction vaMere;
+
+    @OneToMany(mappedBy = "vaMere", cascade = CascadeType.ALL)
+    @JsonManagedReference("vaMere")
+    private List<VariableAction> sousVAs;
 }

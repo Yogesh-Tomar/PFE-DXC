@@ -1,6 +1,7 @@
 package com.example.GestionPlanAction.repository;
 
 import com.example.GestionPlanAction.dto.UserWithProfilView;
+import com.example.GestionPlanAction.dto.UserWithProfilesDTO;
 import com.example.GestionPlanAction.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -46,19 +47,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllWithRelations();
     
 
-    @Query(value="SELECT t.nom, t.actif ,"
-    		+ "    t.id ,"
-    		+ "    t.email ,"
-    		+ "    t.nom ,"
-    		+ "    t.prenom ,"
-    		+ "    t.username ,"
-    		+"l.id,"
-    		+ "    l.nom,"+ "u.id from profil_utilisateur_association p left join profil u on p.id_profil=u.id left join user t on p.id_utilisateur=t.id left join service_line l on t.service_line_id=l.id",nativeQuery = true)
-	List<Object[]> findAllUserWithProfilesAsObjectArray();
-
-    
-    
-    
-    
-
+    @Query(value = """
+    SELECT 
+        t.id, t.nom, t.actif, t.email, t.prenom, t.username,
+        l.id as serviceLineId, l.nom as serviceLineName,
+        u.id as profilId, u.nom as profilNom
+    FROM profil_utilisateur_association p
+    LEFT JOIN profil u ON p.id_profil = u.id
+    LEFT JOIN user t ON p.id_utilisateur = t.id
+    LEFT JOIN service_line l ON t.service_line_id = l.id
+    """, nativeQuery = true)
+    List<UserWithProfilesDTO> findAllUserWithProfilesAsDTO();
 }

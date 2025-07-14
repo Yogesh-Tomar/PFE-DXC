@@ -1,8 +1,10 @@
 package com.example.GestionPlanAction.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -131,52 +133,38 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<UserWithProfilesDTO> getAllUsersWithProfiles() {
+		List<UserWithProfilesDTO> flatList = repository.findAllUserWithProfilesAsDTO();
 
-		List<Object[]> flatLists = new ArrayList<>();
-		flatLists = repository.findAllUserWithProfilesAsObjectArray();
+		Map<Long, UserWithProfilesDTO> userMap = new HashMap<>();
 
-		List<UserWithProfilesDTO> userWithProfilesDTOs = new ArrayList<>();
+		for (UserWithProfilesDTO flat : flatList) {
+			UserWithProfilesDTO dto = userMap.get(flat.getId());
 
-		for (Object[] obj : flatLists) {
+			// Build ProfilDTO from profile columns (not from getProfils)
+			ProfilDTO profilDTO = new ProfilDTO(flat.getProfilId(), flat.getProfilNom());
 
-			UserWithProfilesDTO userWithProfilesDTO = new UserWithProfilesDTO();
-			Set<ProfilDTO> profils = new HashSet<>();
-
-			int index = IntStream.range(0, userWithProfilesDTOs.size())
-					.filter(i -> userWithProfilesDTOs.get(i).getUsername().equals((String) obj[6])).findFirst()
-					.orElse(-1);
-			if (index != -1) {
-
-				profils.add(new ProfilDTO((Long) obj[9], (String) obj[0]));
-
-				userWithProfilesDTO = userWithProfilesDTOs.get(index);
-
-				userWithProfilesDTO.getProfils().addAll(profils);
-			} else {
-
-				
-				profils.add(new ProfilDTO((Long) obj[9], (String) obj[0]));
-
-
-				// Create a new DTO
-				userWithProfilesDTO.setNom((String) obj[0]);
-				userWithProfilesDTO.setActif((Boolean) obj[1]);
-				userWithProfilesDTO.setEmail((String) obj[3]);
-				userWithProfilesDTO.setId((Long) obj[2]);
-				userWithProfilesDTO.setServiceLineName((String) obj[8]);
-				userWithProfilesDTO.setServiceLineId((Long) obj[9]);
-				userWithProfilesDTO.setPrenom((String) obj[5]);
-				userWithProfilesDTO.setUsername((String) obj[6]);
-				userWithProfilesDTO.setProfils(profils);
-				userWithProfilesDTOs.add(userWithProfilesDTO);
-
-				System.out.println("UserWithProfilesDTO nom: " + userWithProfilesDTO.toString());
-
+			if (dto == null) {
+				dto = new UserWithProfilesDTO(
+					flat.getId(),
+					flat.getNom(),
+					flat.getActif(),
+					flat.getEmail(),
+					flat.getPrenom(),
+					flat.getUsername(),
+					flat.getServiceLineId(),
+					flat.getServiceLineName(),
+					flat.getProfilId(),
+					flat.getProfilNom()
+				);
+				userMap.put(flat.getId(), dto);
 			}
-
+			// Add profile if profilId is not null
+			if (flat.getProfilId() != null) {
+				dto.getProfils().add(profilDTO);
+			}
 		}
 
-		return userWithProfilesDTOs;
+		return new ArrayList<>(userMap.values());
 	}
 
 	public UserResponseDTO updateUserStatus(Long id, Boolean actif) {

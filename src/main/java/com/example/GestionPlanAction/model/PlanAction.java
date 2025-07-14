@@ -1,6 +1,7 @@
 package com.example.GestionPlanAction.model;
 
 import com.example.GestionPlanAction.enums.StatutPlanAction;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,5 +29,6 @@ public class PlanAction {
     private Exercice exercice;
 
     @OneToMany(mappedBy = "planAction", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<VariableAction> variableActions;
 }

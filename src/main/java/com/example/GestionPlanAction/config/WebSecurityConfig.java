@@ -88,8 +88,10 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/analytics/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL")
                     
                     // Collaborator and above endpoints
-                    .requestMatchers("/api/plans/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
-                    .requestMatchers("/api/variable-actions/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
+                    // .requestMatchers("/api/plans/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
+                    // .requestMatchers("/api/variable-actions/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
+                    .requestMatchers("/api/plans/**").permitAll()
+                    .requestMatchers("/api/variable-actions/**").permitAll()
                     .requestMatchers("/api/notifications/**").authenticated()
                     
                     // All other requests require authentication

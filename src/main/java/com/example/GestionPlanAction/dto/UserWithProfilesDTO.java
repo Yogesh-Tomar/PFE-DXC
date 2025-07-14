@@ -46,18 +46,29 @@ public class UserWithProfilesDTO {
 	public Long getServiceLineId() {
 		return serviceLineId;
 	}
-	public UserWithProfilesDTO(Long id, String nom, String prenom, String email, String username, Boolean actif,
-			String serviceLineName, Long serviceLineId, Set<ProfilDTO> profils) {
-		super();
-		this.id = id;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.email = email;
-		this.username = username;
-		this.actif = actif;
-		this.serviceLineName = serviceLineName;
-		this.serviceLineId = serviceLineId;
-		this.profils = profils;
+	public UserWithProfilesDTO(
+	    Long id,
+	    String nom,
+	    Boolean actif,
+	    String email,
+	    String prenom,
+	    String username,
+	    Long serviceLineId,
+	    String serviceLineName,
+	    Long profilId,
+	    String profilNom
+	) {
+	    this.id = id;
+	    this.nom = nom;
+	    this.actif = actif;
+	    this.email = email;
+	    this.prenom = prenom;
+	    this.username = username;
+	    this.serviceLineId = serviceLineId;
+	    this.serviceLineName = serviceLineName;
+	    this.profilId = profilId;
+	    this.profilNom = profilNom;
+	    this.profils = new HashSet<>();
 	}
 	public Boolean getActif() { return actif; }
     public void setActif(Boolean actif) { this.actif = actif; }
@@ -65,4 +76,12 @@ public class UserWithProfilesDTO {
    // public void setServiceLineId(String serviceLineId) { this.serviceLineId = serviceLineId; }
     public Set<ProfilDTO> getProfils() { return profils; }
     public void setProfils(Set<ProfilDTO> profils) { this.profils = profils; }
+
+	private Long profilId;
+	private String profilNom;
+
+	public Long getProfilId() { return profilId; }
+	public void setProfilId(Long profilId) { this.profilId = profilId; }
+	public String getProfilNom() { return profilNom; }
+	public void setProfilNom(String profilNom) { this.profilNom = profilNom; }
 }
