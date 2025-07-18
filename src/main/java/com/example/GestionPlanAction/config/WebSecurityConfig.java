@@ -70,28 +70,25 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/test/**").permitAll()
                     .requestMatchers("/swagger-ui.html").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                    
-                    // Temporarily allow users endpoint for testing
-                    .requestMatchers("/api/users/**").permitAll()
+                   
                     // Debug endpoint for checking authentication
                     .requestMatchers("/api/test/auth-debug").permitAll()
-                    // Temporarily allow servicelines for testing
-                    .requestMatchers("/api/servicelines/**").permitAll()
                     
                     // Admin only endpoints
                     .requestMatchers("/api/profils/**").hasRole("ADMINISTRATEUR")
                     .requestMatchers("/api/audit/**").hasRole("ADMINISTRATEUR")
-                    
+                    .requestMatchers("/api/users/**").hasRole("ADMINISTRATEUR")
+                    .requestMatchers("/api/servicelines/**").hasRole("ADMINISTRATEUR")
+
                     // Director endpoints
                     .requestMatchers("/api/exercices/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL")
                     .requestMatchers("/api/plans/*/approve").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL")
                     .requestMatchers("/api/analytics/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL")
                     
                     // Collaborator and above endpoints
-                    // .requestMatchers("/api/plans/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
-                    // .requestMatchers("/api/variable-actions/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
-                    .requestMatchers("/api/plans/**").permitAll()
-                    .requestMatchers("/api/variable-actions/**").permitAll()
+                    .requestMatchers("/api/plans/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
+                    .requestMatchers("/api/variable-actions/**").hasAnyRole("ADMINISTRATEUR", "DIRECTEUR_GENERAL", "COLLABORATEUR")
+                    
                     .requestMatchers("/api/notifications/**").authenticated()
                     
                     // All other requests require authentication
